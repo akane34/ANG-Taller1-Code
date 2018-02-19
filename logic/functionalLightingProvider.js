@@ -40,13 +40,29 @@ function deleteElement(id, res, sendResponse) {
 
 function isValidprovider(provider){
     return (provider &&
-        provider.name
+        provider.name &&
+        provider.nit &&
+        provider.address &&
+        provider.phone &&
+        provider.webPage &&
+        provider.city &&
+        provider.state &&
+        provider.country &&
+        provider.merchantRegistration
     );
 }
 
 function createCleanprovider(provider){
     var cleanprovider = {};
     cleanprovider.name = provider.name;
+    cleanprovider.nit = provider.nit;
+    cleanprovider.address = provider.address;
+    cleanprovider.phone = provider.phone;
+    cleanprovider.webPage = provider.webPage;
+    cleanprovider.city = provider.city;
+    cleanprovider.state = provider.state;
+    cleanprovider.country = provider.country;
+    cleanprovider.merchantRegistration = provider.merchantRegistration;
     cleanprovider.creationDate = (new Date()).getTime();
 
     return cleanprovider;
