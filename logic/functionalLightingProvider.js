@@ -46,7 +46,7 @@ function isValidprovider(provider){
 
 function createCleanprovider(provider){
     var cleanprovider = {};
-    cleanprovider.question = provider.question;
+    cleanprovider.name = provider.name;
     cleanprovider.creationDate = (new Date()).getTime();
 
     return cleanprovider;

@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const server = process.env.CCV_MONGODB_SERVER || 'localhost';
 const port = process.env.CCV_MONGODB_PORT || '27017';
 const database = process.env.CCV_MONGODB_DATABASE || 'FunctionalLightingProvider';
-const url = 'mongodb://' + server + ':' + port + '/' + database;
+const url = 'mongodb://' + server + ':' + port;
 
 const SUCCESS = true;
 const  FAIL = false;
@@ -10,14 +10,15 @@ const  FAIL = false;
 function findAll(collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function(err, db) {
+        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
-            createIfCollectionNotExist(collectionName, function (isSuccess, re){
+            createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
-                    db.collection(collectionName).find({}).toArray(function (err, result) {
+                    dbo.collection(collectionName).find({}).toArray(function (err, result) {
                         var data = {};
                         if (err) {
                             data = err;
@@ -45,15 +46,16 @@ function findById(id, collectionName, res, sendResponse) {
 function findByIdElement(query, collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function (err, db) {
+        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
-            createIfCollectionNotExist(collectionName, function (isSuccess, re){
+            createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
                     var mysort = {creationDate: -1};
-                    db.collection(collectionName).find(query).sort(mysort).toArray(function (err, result) {
+                    dbo.collection(collectionName).find(query).sort(mysort).toArray(function (err, result) {
                         var data = {};
                         if (err)
                             data = err;
@@ -78,14 +80,15 @@ function findByIdElement(query, collectionName, res, sendResponse) {
 function create(element, collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function(err, db) {
+        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
-            createIfCollectionNotExist(collectionName, function (isSuccess, re){
+            createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
-                    return db.collection(collectionName).save(element, function (err, result) {
+                    return dbo.collection(collectionName).save(element, function (err, result) {
                         var data = {};
                         if (err)
                             data = err;
@@ -110,6 +113,7 @@ function update(element, collectionName, res, sendResponse) {
         if (isSuccess && isSuccess === true) {
 
             MongoClient.connect(url, function (err, db) {
+                var dbo = db.db(database);
                 if (err) {
                     console.log(err);
                     sendResponse(err, FAIL, res);
@@ -117,16 +121,16 @@ function update(element, collectionName, res, sendResponse) {
                 else {
                     var query = {id: element.id};
                     var mysort = {creationDate: 1};
-                    db.collection(collectionName).find(query).sort(mysort).toArray(function (err, result) {
+                    dbo.collection(collectionName).find(query).sort(mysort).toArray(function (err, result) {
                         var data = {};
                         if (err)
                             data = err;
                         else
                             data = result;
 
-                        if (data.length > 5) {
+                        if (data.length > 1) {
                             var myquery = {id: data[0].id};
-                            db.collection(collectionName).deleteOne(myquery, function (err, obj) {
+                            dbo.collection(collectionName).deleteOne(myquery, function (err, obj) {
                             });
                         }
 
@@ -146,15 +150,16 @@ function update(element, collectionName, res, sendResponse) {
 function deleteElement(id, collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function(err, db) {
+        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
-            createIfCollectionNotExist(collectionName, function (isSuccess, re){
+            createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
                     var myquery = {id: id};
-                    db.collection(collectionName).remove(myquery, function (err, result) {
+                    dbo.collection(collectionName).remove(myquery, function (err, result) {
                         var data = {};
                         if (err)
                             data = err;
@@ -174,33 +179,56 @@ function deleteElement(id, collectionName, res, sendResponse) {
     });
 }
 
-function createIfCollectionNotExist (name, cb) {
+function createIfCollectionNotExist (name, dbo, cb) {
+    /*
     MongoClient.connect(url, function(err, db) {
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
-            db.listCollections({name: name})
+*/
+            /*
+            dbo.createCollection(name, function(err, res) {
+                if (err){
+                    cb (FAIL, err);
+                }
+                else{
+                    //db.close();
+                    cb (SUCCESS, name);
+                }
+            });*/
+            /*db.listCollections().toArray(function(err, collections){
+                //collections = [{"name": "coll1"}, {"name": "coll2"}]
+            });*/
+            /*
+            if (!db.collections().map(c => c.s.name).includes(collName)) {
+                db.createCollection(collName);
+            }
+            */
+            /*
+            db.collectionNames(name, function(err, names) {
+                cb (names.length > 0, name);
+            });*/
+
+            dbo.listCollections({name: name})
                 .next(function(err, collinfo) {
                     if (collinfo) {
-                        db.close();
                         cb (SUCCESS, name);
                     }
                     else{
-                        db.createCollection(name, function(err, res) {
+                        dbo.createCollection(name, function(err, res) {
                             if (err){
                                 cb (FAIL, err);
                             }
                             else{
-                                db.close();
                                 cb (SUCCESS, name);
                             }
                         });
                     }
                 });
-        }
-    });
+     //   }
+    //});
 }
 
 exports.findAll = findAll;
