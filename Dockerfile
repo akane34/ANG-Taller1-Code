@@ -15,7 +15,7 @@ RUN apt-get install -y nodejs
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 WORKDIR /app
-RUN git clone -b master git@github.com:akane34/ANG-Taller1-Code.git /app/
+RUN git clone -b master https://github.com/akane34/ANG-Taller1-Code.git /app/
 #ADD . /app
 #COPY mongodb.sh /app/mongodb.sh
 
