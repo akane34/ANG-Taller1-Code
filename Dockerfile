@@ -17,7 +17,7 @@ RUN ln -s /usr/bin/nodejs /usr/bin/node
 WORKDIR /app
 RUN git clone -b master https://github.com/akane34/ANG-Taller1-Code.git /app/
 #ADD . /app
-#COPY mongodb.sh /app/mongodb.sh
+COPY mongodb.sh /app/mongodb.sh
 
 RUN chmod 777 /app/mongodb.sh
 RUN npm install

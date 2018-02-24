@@ -10,12 +10,12 @@ const  FAIL = false;
 function findAll(collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function(err, db) {
-        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
+            var dbo = db.db(database);
             createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
                     dbo.collection(collectionName).find({}).toArray(function (err, result) {
@@ -46,12 +46,12 @@ function findById(id, collectionName, res, sendResponse) {
 function findByIdElement(query, collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function (err, db) {
-        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
+            var dbo = db.db(database);
             createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
                     var mysort = {creationDate: -1};
@@ -80,12 +80,12 @@ function findByIdElement(query, collectionName, res, sendResponse) {
 function create(element, collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function(err, db) {
-        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
+            var dbo = db.db(database);
             createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
                     return dbo.collection(collectionName).save(element, function (err, result) {
@@ -113,12 +113,12 @@ function update(element, collectionName, res, sendResponse) {
         if (isSuccess && isSuccess === true) {
 
             MongoClient.connect(url, function (err, db) {
-                var dbo = db.db(database);
                 if (err) {
                     console.log(err);
                     sendResponse(err, FAIL, res);
                 }
                 else {
+                    var dbo = db.db(database);
                     var query = {id: element.id};
                     var mysort = {creationDate: 1};
                     dbo.collection(collectionName).find(query).sort(mysort).toArray(function (err, result) {
@@ -150,12 +150,12 @@ function update(element, collectionName, res, sendResponse) {
 function deleteElement(id, collectionName, res, sendResponse) {
 
     MongoClient.connect(url, function(err, db) {
-        var dbo = db.db(database);
         if (err) {
             console.log(err);
             sendResponse(err, FAIL, res);
         }
         else {
+            var dbo = db.db(database);
             createIfCollectionNotExist(collectionName, dbo, function (isSuccess, re){
                 if (isSuccess && isSuccess === true) {
                     var myquery = {id: id};
