@@ -1,5 +1,6 @@
 #!/bin/sh
 git clone -b master https://github.com/akane34/ANG-Taller1-Code.git /app/
-npm install
+mkdir -p /app/node_modules
+npm install --prefix /app
 mongod &
-npm start
+node /app/app.js
