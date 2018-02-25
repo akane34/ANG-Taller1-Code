@@ -17,7 +17,7 @@ RUN ln -s /usr/bin/nodejs /usr/bin/node
 WORKDIR /app
 #RUN git clone -b master https://github.com/akane34/ANG-Taller1-Code.git /app/
 #ADD . /app
-COPY run_start.sh /app/run_start_sh
+COPY run_start.sh /app/run_start.sh
 
 RUN chmod 777 /app/run_start.sh
 #RUN npm install
