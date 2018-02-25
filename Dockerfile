@@ -15,13 +15,13 @@ RUN apt-get install -y nodejs
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 WORKDIR /app
-RUN git clone -b master https://github.com/akane34/ANG-Taller1-Code.git /app/
+#RUN git clone -b master https://github.com/akane34/ANG-Taller1-Code.git /app/
 #ADD . /app
-COPY mongodb.sh /app/mongodb.sh
+COPY run_start.sh /app/run_start_sh
 
-RUN chmod 777 /app/mongodb.sh
-RUN npm install
+RUN chmod 777 /app/run_start.sh
+#RUN npm install
 
 EXPOSE 4001 27017
-ENTRYPOINT ["/app/mongodb.sh"]
+ENTRYPOINT ["/app/run_start.sh"]
 CMD ["npm", "start"]
